@@ -30,6 +30,11 @@ public class MsanController {
         return ResponseEntity.ok(msanService.findAll(idGouv, idDelegation));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<MsanResponse> update(@PathVariable Integer id, @Valid @RequestBody MsanRequest request) {
+        return ResponseEntity.ok(msanService.update(id, request));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         msanService.delete(id);

@@ -31,6 +31,11 @@ public class StationGSMController {
         return ResponseEntity.ok(stationGSMService.findAll(idGouv, idDelegation, fournisseur));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<StationGsmResponse> update(@PathVariable Integer id, @Valid @RequestBody StationGsmRequest request) {
+        return ResponseEntity.ok(stationGSMService.update(id, request));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         stationGSMService.delete(id);

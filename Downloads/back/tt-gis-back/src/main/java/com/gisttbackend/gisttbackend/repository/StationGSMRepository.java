@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface StationGSMRepository extends JpaRepository<StationGSM, Integer>, JpaSpecificationExecutor<StationGSM> {
     boolean existsByCode(String code);
+    boolean existsByCodeAndIdStationNot(String code, Integer idStation);
 }

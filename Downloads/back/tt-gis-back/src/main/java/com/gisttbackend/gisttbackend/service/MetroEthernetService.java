@@ -59,6 +59,42 @@ public class MetroEthernetService {
     }
 
     @Transactional
+    public MetroEthernetResponse update(Integer id, MetroEthernetRequest request) {
+        System.out.println("=== UPDATE METRO ETHERNET ===");
+        System.out.println("ID: " + id);
+        System.out.println("Code: " + request.getCode());
+        System.out.println("CoordX: " + request.getCoordX());
+        System.out.println("CoordY: " + request.getCoordY());
+        System.out.println("IdDelegation: " + request.getIdDelegation());
+
+        MetroEthernet entity = metroEthernetRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("MetroEthernet introuvable"));
+
+        if (metroEthernetRepository.existsByCodeAndIdMetroNot(request.getCode(), id)) {
+            throw new IllegalArgumentException("Ce code existe déjà : " + request.getCode());
+        }
+
+        if (request.getPortsOccupes() > request.getPortsRaccordes()) {
+            throw new IllegalArgumentException("Les ports occupés ne peuvent pas dépasser les ports raccordés");
+        }
+
+        Delegation delegation = delegationRepository.findById(request.getIdDelegation())
+                .orElseThrow(() -> new IllegalArgumentException("Délégation introuvable"));
+
+        entity.setCode(request.getCode());
+        entity.setNom(request.getNom());
+        entity.setDelegation(delegation);
+        entity.setCoordX(request.getCoordX());
+        entity.setCoordY(request.getCoordY());
+        entity.setIpGestion(request.getIpGestion());
+        entity.setPortsRaccordes(request.getPortsRaccordes());
+        entity.setPortsOccupes(request.getPortsOccupes());
+
+        MetroEthernet saved = metroEthernetRepository.save(entity);
+        return toResponse(metroEthernetRepository.findById(saved.getIdMetro()).orElseThrow());
+    }
+
+    @Transactional
     public void delete(Integer id) {
         if (!metroEthernetRepository.existsById(id)) {
             throw new IllegalArgumentException("MetroEthernet introuvable");

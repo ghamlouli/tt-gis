@@ -30,6 +30,11 @@ public class MetroEthernetController {
         return ResponseEntity.ok(metroEthernetService.findAll(idGouv, idDelegation));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<MetroEthernetResponse> update(@PathVariable Integer id, @Valid @RequestBody MetroEthernetRequest request) {
+        return ResponseEntity.ok(metroEthernetService.update(id, request));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         metroEthernetService.delete(id);

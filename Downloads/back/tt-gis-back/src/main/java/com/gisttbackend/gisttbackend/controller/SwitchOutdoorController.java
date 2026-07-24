@@ -30,6 +30,11 @@ public class SwitchOutdoorController {
         return ResponseEntity.ok(switchOutdoorService.findAll(idGouv, idDelegation));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<SwitchOutdoorResponse> update(@PathVariable Integer id, @Valid @RequestBody SwitchOutdoorRequest request) {
+        return ResponseEntity.ok(switchOutdoorService.update(id, request));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         switchOutdoorService.delete(id);

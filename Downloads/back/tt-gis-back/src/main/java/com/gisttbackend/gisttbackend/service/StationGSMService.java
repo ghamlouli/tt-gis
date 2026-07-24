@@ -59,6 +59,29 @@ public class StationGSMService {
     }
 
     @Transactional
+    public StationGsmResponse update(Integer id, StationGsmRequest request) {
+        StationGSM entity = stationGSMRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Site GSM introuvable"));
+
+        if (stationGSMRepository.existsByCodeAndIdStationNot(request.getCode(), id)) {
+            throw new IllegalArgumentException("Ce code existe déjà : " + request.getCode());
+        }
+
+        Delegation delegation = delegationRepository.findById(request.getIdDelegation())
+                .orElseThrow(() -> new IllegalArgumentException("Délégation introuvable"));
+
+        entity.setCode(request.getCode());
+        entity.setNom(request.getNom());
+        entity.setDelegation(delegation);
+        entity.setCoordX(request.getCoordX());
+        entity.setCoordY(request.getCoordY());
+        entity.setTechnologies(request.getTechnologies());
+        entity.setFournisseur(request.getFournisseur());
+
+        return toResponse(stationGSMRepository.save(entity));
+    }
+
+    @Transactional
     public void delete(Integer id) {
         if (!stationGSMRepository.existsById(id)) {
             throw new IllegalArgumentException("Site GSM introuvable");

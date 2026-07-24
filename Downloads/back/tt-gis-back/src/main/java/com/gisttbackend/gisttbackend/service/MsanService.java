@@ -52,6 +52,34 @@ public class MsanService {
     }
 
     @Transactional
+    public MsanResponse update(Integer id, MsanRequest request) {
+        Msan entity = msanRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("MSAN introuvable"));
+
+        if (msanRepository.existsByCodeAndIdMsanNot(request.getCode(), id)) {
+            throw new IllegalArgumentException("Ce code existe déjà : " + request.getCode());
+        }
+
+        if (request.getCapaciteOccupee() > request.getCapaciteRaccordee()) {
+            throw new IllegalArgumentException("La capacité occupée ne peut pas dépasser la capacité raccordée");
+        }
+
+        Delegation delegation = delegationRepository.findById(request.getIdDelegation())
+                .orElseThrow(() -> new IllegalArgumentException("Délégation introuvable"));
+
+        entity.setCode(request.getCode());
+        entity.setNom(request.getNom());
+        entity.setDelegation(delegation);
+        entity.setCoordX(request.getCoordX());
+        entity.setCoordY(request.getCoordY());
+        entity.setCapaciteRaccordee(request.getCapaciteRaccordee());
+        entity.setCapaciteOccupee(request.getCapaciteOccupee());
+
+        Msan saved = msanRepository.save(entity);
+        return toResponse(msanRepository.findById(saved.getIdMsan()).orElseThrow());
+    }
+
+    @Transactional
     public void delete(Integer id) {
         if (!msanRepository.existsById(id)) {
             throw new IllegalArgumentException("MSAN introuvable");

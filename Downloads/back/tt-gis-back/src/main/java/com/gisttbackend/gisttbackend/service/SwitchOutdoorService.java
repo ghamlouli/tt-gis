@@ -52,6 +52,34 @@ public class SwitchOutdoorService {
     }
 
     @Transactional
+    public SwitchOutdoorResponse update(Integer id, SwitchOutdoorRequest request) {
+        SwitchOutdoor entity = switchOutdoorRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Switch outdoor introuvable"));
+
+        if (switchOutdoorRepository.existsByCodeAndIdSwitchNot(request.getCode(), id)) {
+            throw new IllegalArgumentException("Ce code existe déjà : " + request.getCode());
+        }
+
+        if (request.getPortsOccupes() > request.getPortsAttribues()) {
+            throw new IllegalArgumentException("Les ports occupés ne peuvent pas dépasser les ports attribués");
+        }
+
+        Delegation delegation = delegationRepository.findById(request.getIdDelegation())
+                .orElseThrow(() -> new IllegalArgumentException("Délégation introuvable"));
+
+        entity.setCode(request.getCode());
+        entity.setNom(request.getNom());
+        entity.setDelegation(delegation);
+        entity.setCoordX(request.getCoordX());
+        entity.setCoordY(request.getCoordY());
+        entity.setPortsAttribues(request.getPortsAttribues());
+        entity.setPortsOccupes(request.getPortsOccupes());
+
+        SwitchOutdoor saved = switchOutdoorRepository.save(entity);
+        return toResponse(switchOutdoorRepository.findById(saved.getIdSwitch()).orElseThrow());
+    }
+
+    @Transactional
     public void delete(Integer id) {
         if (!switchOutdoorRepository.existsById(id)) {
             throw new IllegalArgumentException("Switch outdoor introuvable");

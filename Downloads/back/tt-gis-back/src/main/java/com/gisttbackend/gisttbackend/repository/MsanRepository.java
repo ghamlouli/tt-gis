@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface MsanRepository extends JpaRepository<Msan, Integer>, JpaSpecificationExecutor<Msan> {
     boolean existsByCode(String code);
+    boolean existsByCodeAndIdMsanNot(String code, Integer idMsan);
 }

@@ -37,6 +37,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/ping").permitAll()
                         .requestMatchers("/api/visiteurs/**").permitAll()
                         .requestMatchers("/api/gis-cloud").permitAll()
+                        .requestMatchers("/api/metroethernets/**").permitAll()
+                        .requestMatchers("/api/stations-gsm/**").permitAll()
+                        .requestMatchers("/api/msan/**").permitAll()
+                        .requestMatchers("/api/switch-outdoor/**").permitAll()
+                        .requestMatchers("/api/lien-fh/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
