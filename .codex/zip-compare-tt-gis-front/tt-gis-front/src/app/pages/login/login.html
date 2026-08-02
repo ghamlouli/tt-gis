@@ -1,0 +1,130 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <img src="/assets/tt-logo.png" alt="Tunisie Telecom" class="auth-logo">
+
+    <div class="auth-tabs">
+      <button
+        type="button"
+        class="auth-tab"
+        [class.active]="mode === 'signin'"
+        (click)="setMode('signin')">
+        Connexion
+      </button>
+      <button
+        type="button"
+        class="auth-tab"
+        [class.active]="mode === 'signup'"
+        (click)="setMode('signup')">
+        Inscription
+      </button>
+    </div>
+
+    <form *ngIf="mode === 'signin'" class="auth-form" (ngSubmit)="submitSignIn()">
+      <label for="identifier">Email</label>
+      <input
+        id="identifier"
+        type="email"
+        name="identifier"
+        placeholder="votre.email@exemple.com"
+        autocomplete="username"
+        [(ngModel)]="identifier">
+
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Mot de passe"
+        autocomplete="current-password"
+        [(ngModel)]="password">
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <form *ngIf="mode === 'signup'" class="auth-form" (ngSubmit)="submitSignUp()">
+      <label for="prenom">Prénom</label>
+      <input
+        id="prenom"
+        type="text"
+        name="prenom"
+        placeholder="Prénom"
+        autocomplete="given-name"
+        [(ngModel)]="prenom">
+
+      <label for="nom">Nom</label>
+      <input
+        id="nom"
+        type="text"
+        name="nom"
+        placeholder="Nom"
+        autocomplete="family-name"
+        [(ngModel)]="nom">
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="votre.email@exemple.com"
+        autocomplete="email"
+        [(ngModel)]="email">
+
+      <label for="telephone">Téléphone</label>
+      <input
+        id="telephone"
+        type="tel"
+        name="telephone"
+        placeholder="+216 XX XXX XXX"
+        autocomplete="tel"
+        [(ngModel)]="telephone">
+
+      <label for="role">Rôle</label>
+      <select
+        id="role"
+        name="role"
+        [(ngModel)]="selectedRole">
+        <option *ngFor="let role of roleOptions" [ngValue]="role.value">
+          {{ role.label }} — {{ role.description }}
+        </option>
+      </select>
+
+      <label for="signUpPassword">Mot de passe</label>
+      <input
+        id="signUpPassword"
+        type="password"
+        name="signUpPassword"
+        placeholder="Mot de passe"
+        autocomplete="new-password"
+        [(ngModel)]="signUpPassword">
+
+      <label for="confirmPassword">Confirmer le mot de passe</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        name="confirmPassword"
+        placeholder="Confirmer le mot de passe"
+        autocomplete="new-password"
+        [(ngModel)]="confirmPassword">
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Inscription...' : 'Créer un compte' }}
+      </button>
+    </form>
+
+    <p class="auth-switch" *ngIf="mode === 'signin'">
+      Première visite ?
+      <button type="button" class="link-btn" (click)="setMode('signup')">Créer un compte</button>
+    </p>
+
+    <p class="auth-switch" *ngIf="mode === 'signup'">
+      Déjà inscrit ?
+      <button type="button" class="link-btn" (click)="setMode('signin')">Se connecter</button>
+    </p>
+  </div>
+</div>

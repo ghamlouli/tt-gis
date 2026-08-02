@@ -1,0 +1,108 @@
+<section class="module-dashboard" [style.--dash-accent]="page.accent">
+  <header class="dash-hero">
+    <div>
+      <span class="badge">{{ page.badge }}</span>
+      <h1>{{ page.title }}</h1>
+      <p class="subtitle">{{ page.subtitle }}</p>
+      <p class="intro" *ngIf="page.intro">{{ page.intro }}</p>
+    </div>
+
+    <div class="quick-links">
+      <button
+        type="button"
+        class="quick-link"
+        *ngFor="let link of page.quickLinks"
+        (click)="navigateTo(link)">
+        <i class="bi" [class]="link.icon || 'bi-arrow-right-circle'"></i>
+        {{ link.label }}
+      </button>
+    </div>
+  </header>
+
+  <section class="kpi-grid">
+    <article
+      class="kpi-card"
+      *ngFor="let kpi of dashboard.kpis"
+      [class]="'kpi-card--' + kpi.tone">
+      <div class="kpi-card__icon">
+        <i class="bi" [class]="kpi.icon"></i>
+      </div>
+      <div>
+        <span class="kpi-card__label">{{ kpi.label }}</span>
+        <strong class="kpi-card__value">{{ kpi.value }}</strong>
+        <p class="kpi-card__hint">{{ kpi.hint }}</p>
+      </div>
+    </article>
+  </section>
+
+  <div class="dash-grid">
+    <section class="dash-panel">
+      <header class="dash-panel__header">
+        <h2>Indicateurs clés</h2>
+        <p>Visualisation basée sur les enregistrements saisis dans le module.</p>
+      </header>
+
+      <div class="bars-list" *ngIf="dashboard.bars.length; else noBars">
+        <article class="bar-item" *ngFor="let bar of dashboard.bars">
+          <div class="bar-item__top">
+            <strong>{{ bar.label }}</strong>
+            <span>{{ bar.value }} {{ bar.unit }}</span>
+          </div>
+          <div class="bar-track">
+            <div
+              class="bar-fill"
+              [style.width.%]="getBarWidth(bar.value, bar.max)"></div>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #noBars>
+        <div class="empty-panel">
+          <i class="bi bi-bar-chart"></i>
+          <p>Ajoutez des enregistrements pour alimenter les graphiques du module.</p>
+        </div>
+      </ng-template>
+    </section>
+
+    <section class="dash-panel">
+      <header class="dash-panel__header">
+        <h2>Répartition</h2>
+        <p>Synthèse intelligente par statut, technologie ou type.</p>
+      </header>
+
+      <div class="distribution-list" *ngIf="dashboard.distribution.length; else noDistribution">
+        <article class="distribution-item" *ngFor="let item of dashboard.distribution">
+          <div class="distribution-item__top">
+            <span>{{ item.label }}</span>
+            <strong>{{ item.count }}</strong>
+          </div>
+          <div class="bar-track bar-track--light">
+            <div
+              class="bar-fill bar-fill--accent"
+              [style.width.%]="getBarWidth(item.count, getDistributionMax())"></div>
+          </div>
+        </article>
+      </div>
+
+      <ng-template #noDistribution>
+        <div class="empty-panel">
+          <i class="bi bi-pie-chart"></i>
+          <p>Les répartitions apparaîtront dès que des données seront disponibles.</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+  <section class="insights-grid">
+    <article
+      class="insight-card"
+      *ngFor="let insight of dashboard.insights"
+      [class]="'insight-card--' + insight.tone">
+      <i class="bi" [class]="insight.icon"></i>
+      <div>
+        <h3>{{ insight.title }}</h3>
+        <p>{{ insight.description }}</p>
+      </div>
+    </article>
+  </section>
+</section>

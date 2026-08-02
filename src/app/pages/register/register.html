@@ -1,0 +1,50 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <img src="/assets/tt-logo.png" alt="Tunisie Telecom" class="auth-logo">
+
+    <h1 class="auth-title">Création de compte</h1>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <label for="matricule">Matricule</label>
+      <input
+        id="matricule"
+        type="text"
+        name="matricule"
+        inputmode="numeric"
+        placeholder="Matricule (chiffres uniquement)"
+        [(ngModel)]="matricule">
+
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" name="nom" placeholder="Nom" [(ngModel)]="nom">
+
+      <label for="prenom">Prénom</label>
+      <input id="prenom" type="text" name="prenom" placeholder="Prénom" [(ngModel)]="prenom">
+
+      <label for="profil">Profil</label>
+      <select id="profil" name="profil" [(ngModel)]="profil">
+        <option value="" disabled selected>Sélectionner un profil</option>
+        <option *ngFor="let p of profils" [value]="p">{{ p }}</option>
+      </select>
+
+      <label for="login">Login</label>
+      <input id="login" type="text" name="login" placeholder="Login (unique, sans espace)" autocomplete="username" [(ngModel)]="login">
+
+      <label for="motDePasse">Mot de passe</label>
+      <input id="motDePasse" type="password" name="motDePasse" placeholder="Mot de passe" autocomplete="new-password" [(ngModel)]="motDePasse">
+
+      <label for="confirmMotDePasse">Confirmer le mot de passe</label>
+      <input id="confirmMotDePasse" type="password" name="confirmMotDePasse" placeholder="Confirmer le mot de passe" autocomplete="new-password" [(ngModel)]="confirmMotDePasse">
+
+      <p class="error-message" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Création...' : 'Valider' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      Déjà inscrit ?
+      <button type="button" class="link-btn" (click)="goToLogin()">Se connecter</button>
+    </p>
+  </div>
+</div>

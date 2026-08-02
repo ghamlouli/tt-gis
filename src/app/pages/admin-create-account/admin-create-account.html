@@ -1,0 +1,53 @@
+<div class="admin-page">
+  <div class="admin-card">
+    <h1 class="admin-title">Création de compte utilisateur</h1>
+    <p class="admin-subtitle">Admin uniquement - Créer des comptes pour les autres utilisateurs</p>
+
+    <div class="success-message" *ngIf="successMessage()">
+      {{ successMessage() }}
+    </div>
+
+    <form class="admin-form" (ngSubmit)="submit()">
+      <label for="matricule">Matricule</label>
+      <input
+        id="matricule"
+        type="text"
+        name="matricule"
+        inputmode="numeric"
+        placeholder="Matricule (chiffres uniquement)"
+        [(ngModel)]="matricule">
+
+      <label for="nom">Nom</label>
+      <input id="nom" type="text" name="nom" placeholder="Nom" [(ngModel)]="nom">
+
+      <label for="prenom">Prénom</label>
+      <input id="prenom" type="text" name="prenom" placeholder="Prénom" [(ngModel)]="prenom">
+
+      <label for="profil">Profil</label>
+      <select id="profil" name="profil" [(ngModel)]="profil">
+        <option value="" disabled selected>Sélectionner un profil</option>
+        <option *ngFor="let p of profils" [value]="p">{{ p }}</option>
+      </select>
+
+      <label for="login">Login (email)</label>
+      <input id="login" type="email" name="login" placeholder="Login (email)" autocomplete="username" [(ngModel)]="login">
+
+      <label for="motDePasse">Mot de passe</label>
+      <input id="motDePasse" type="password" name="motDePasse" placeholder="Mot de passe" autocomplete="new-password" [(ngModel)]="motDePasse">
+
+      <label for="confirmMotDePasse">Confirmer le mot de passe</label>
+      <input id="confirmMotDePasse" type="password" name="confirmMotDePasse" placeholder="Confirmer le mot de passe" autocomplete="new-password" [(ngModel)]="confirmMotDePasse">
+
+      <p class="error-message" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <div class="form-actions">
+        <button class="secondary-btn" type="button" (click)="cancel()" [disabled]="loading()">
+          Annuler
+        </button>
+        <button class="primary-btn" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Création...' : 'Créer le compte' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

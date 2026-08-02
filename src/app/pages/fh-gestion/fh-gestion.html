@@ -1,0 +1,36 @@
+<div class="page">
+  <h1 class="page-title">Gestion FH</h1>
+
+  <form class="form-card" (ngSubmit)="submit()">
+    <div class="grid-2">
+      <div class="field">
+        <label for="code">Code</label>
+        <input id="code" name="code" type="text" [(ngModel)]="code">
+      </div>
+      <div class="field">
+        <label for="nom">Nom</label>
+        <input id="nom" name="nom" type="text" [(ngModel)]="nom">
+      </div>
+    </div>
+
+    <app-geo-select [required]="true" [allowAll]="false" (delegationChange)="onDelegationSelected($event)"></app-geo-select>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="x">X</label>
+        <input id="x" name="x" type="number" [(ngModel)]="coordX">
+      </div>
+      <div class="field">
+        <label for="y">Y</label>
+        <input id="y" name="y" type="number" [(ngModel)]="coordY">
+      </div>
+    </div>
+
+    <p class="error-message" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <p class="success-message" *ngIf="successMessage()">{{ successMessage() }}</p>
+
+    <button class="primary-btn" type="submit" [disabled]="loading()">
+      {{ loading() ? 'Insertion...' : 'Insérer' }}
+    </button>
+  </form>
+</div>

@@ -1,0 +1,36 @@
+.gis-map-container {
+  width: 100%;
+  height: 520px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+/* Styles globaux pour le contenu injecté dans les popups Leaflet
+   (non scopés au composant car Leaflet insère ce HTML hors Angular) */
+::ng-deep .gis-popup h4 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+::ng-deep .gis-popup table {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+::ng-deep .gis-popup td {
+  padding: 3px 8px 3px 0;
+  color: #334155;
+}
+
+::ng-deep .gis-popup td:first-child {
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+::ng-deep .gis-marker-icon {
+  background: transparent;
+  border: none;
+}

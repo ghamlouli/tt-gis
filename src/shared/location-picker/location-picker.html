@@ -1,0 +1,11 @@
+<div class="location-picker">
+  <div #mapContainer class="map-container"></div>
+  <div class="location-info">
+    <p *ngIf="initialLat !== null && initialLng !== null">
+      Localisation sélectionnée : {{ initialLat?.toFixed(6) }}, {{ initialLng?.toFixed(6) }}
+    </p>
+    <p *ngIf="initialLat === null || initialLng === null" class="hint">
+      Cliquez sur la carte pour sélectionner votre localisation
+    </p>
+  </div>
+</div>

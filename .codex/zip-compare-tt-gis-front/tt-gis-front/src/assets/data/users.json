@@ -1,0 +1,66 @@
+[
+  {
+    "id_utilisateur": 1,
+    "username": "client",
+    "nom": "Client",
+    "prenom": "Test",
+    "email": "client@tt-gis.local",
+    "mot_de_passe": "1234",
+    "telephone": "+216 70 000 001",
+    "statut": "Actif",
+    "roles": ["CLIENT"],
+    "statistiques": {
+      "modules_accessibles": 3,
+      "consultations_mois": 48,
+      "derniere_connexion": "22/06/2026 08:14"
+    }
+  },
+  {
+    "id_utilisateur": 2,
+    "username": "ingenieur",
+    "nom": "Ingenieur",
+    "prenom": "Test",
+    "email": "ingenieur@tt-gis.local",
+    "mot_de_passe": "1234",
+    "telephone": "+216 70 000 002",
+    "statut": "Actif",
+    "roles": ["INGENIEUR"],
+    "statistiques": {
+      "modules_accessibles": 6,
+      "interventions_mois": 27,
+      "derniere_connexion": "22/06/2026 09:32"
+    }
+  },
+  {
+    "id_utilisateur": 3,
+    "username": "gerant",
+    "nom": "Gerant",
+    "prenom": "Test",
+    "email": "gerant@tt.gis.local",
+    "mot_de_passe": "1234",
+    "telephone": "+216 70 000 003",
+    "statut": "Actif",
+    "roles": ["GERANT"],
+    "statistiques": {
+      "modules_accessibles": 7,
+      "validations_mois": 15,
+      "derniere_connexion": "21/06/2026 17:45"
+    }
+  },
+  {
+    "id_utilisateur": 4,
+    "username": "admin",
+    "nom": "Admin",
+    "prenom": "Test",
+    "email": "admin@tt.gis.local",
+    "mot_de_passe": "1234",
+    "telephone": "+216 70 000 004",
+    "statut": "Actif",
+    "roles": ["ADMIN"],
+    "statistiques": {
+      "modules_accessibles": 7,
+      "utilisateurs_geres": 4,
+      "derniere_connexion": "22/06/2026 10:05"
+    }
+  }
+]

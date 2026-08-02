@@ -1,0 +1,59 @@
+<section class="workspace-page" [class.workspace-page--menu]="isMainMenu">
+  <header class="page-hero" [class.page-hero--menu]="isMainMenu">
+    <div class="hero-top">
+      <div>
+        <span class="badge" *ngIf="page.badge">{{ page.badge }}</span>
+        <h1>{{ page.title }}</h1>
+        <p class="subtitle">{{ page.subtitle }}</p>
+      </div>
+
+      <div class="welcome-card" *ngIf="isMainMenu">
+        <span class="welcome-label">Session active</span>
+        <strong>{{ userName }}</strong>
+        <p>Choisissez un module pour démarrer votre navigation.</p>
+      </div>
+    </div>
+
+    <p class="intro" *ngIf="page.intro">{{ page.intro }}</p>
+
+    <div class="metrics" *ngIf="page.metrics?.length">
+      <article class="metric" *ngFor="let metric of page.metrics">
+        <span>{{ metric.label }}</span>
+        <strong>{{ metric.value }}</strong>
+      </article>
+    </div>
+  </header>
+
+  <div class="content-section" *ngIf="page.cards?.length">
+    <div class="section-heading" *ngIf="isMainMenu">
+      <h2>Modules disponibles</h2>
+      <p>Accès structuré aux formulaires, tableaux de bord et outils de supervision.</p>
+    </div>
+
+    <div class="card-grid">
+      <article
+        class="module-card"
+        *ngFor="let card of page.cards"
+        [style.--card-accent]="card.accent || '#2563eb'"
+        [class.module-card--clickable]="card.route">
+        <div class="module-card__top">
+          <div class="module-card__icon">{{ card.shortLabel || card.title.slice(0, 2).toUpperCase() }}</div>
+          <div class="module-card__meta">
+            <span class="module-card__type">{{ isMainMenu ? 'Module' : 'Formulaire' }}</span>
+            <h2>{{ card.title }}</h2>
+          </div>
+        </div>
+
+        <p class="module-card__description">{{ card.description }}</p>
+
+        <div class="field-list">
+          <div class="field-pill" *ngFor="let item of card.items">{{ item }}</div>
+        </div>
+
+        <button type="button" (click)="openCard(card)">
+          {{ card.actionLabel || 'Ouvrir le formulaire' }}
+        </button>
+      </article>
+    </div>
+  </div>
+</section>

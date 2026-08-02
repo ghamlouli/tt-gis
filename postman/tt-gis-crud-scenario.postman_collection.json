@@ -1,0 +1,3527 @@
+{
+  "info": {
+    "name": "TT GIS - Scenario CRUD complet 12 entites metier",
+    "description": "Executer 00 Authentification puis les dossiers dans l ordre numerote. Les IDs sont captures automatiquement en variables de collection. Les suppressions sont dans 99 Nettoyage, en ordre inverse des dependances FK.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "00 Authentification",
+      "item": [
+        {
+          "name": "01 LOGIN - capture jwtToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "pm.test(\"JWT retourne\", function () {",
+                  "  pm.expect(json.token).to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"jwtToken\", json.token);",
+                  "pm.collectionVariables.set(\"authUserEmail\", json.email);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{authEmail}}\",\n  \"motDePasse\": \"{{authPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "01 Gouvernorat",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idGouv\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idGouv\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idGouv\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/gouvernorats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "gouvernorats"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Tunis\",\n  \"code\": \"TN-11\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/gouvernorats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "gouvernorats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/gouvernorats/{{idGouv}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "gouvernorats",
+                "{{idGouv}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/gouvernorats/{{idGouv}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "gouvernorats",
+                "{{idGouv}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Tunis\",\n  \"code\": \"TN-11-CAP\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 Delegation",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idDelegation\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idDelegation\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idDelegation\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idGouv\": \"{{idGouv}}\",\n  \"nom\": \"Carthage\",\n  \"code\": \"CRG\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations/{{idDelegation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations",
+                "{{idDelegation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY GOUVERNORAT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations/gouvernorat/{{idGouv}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations",
+                "gouvernorat",
+                "{{idGouv}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations/{{idDelegation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations",
+                "{{idDelegation}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idGouv\": \"{{idGouv}}\",\n  \"nom\": \"Carthage Byrsa\",\n  \"code\": \"CRG-BY\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 MetroEthernet",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idMetro\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idMetro\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idMetro\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDelegation\": \"{{idDelegation}}\",\n  \"nom\": \"ME-Carthage-001\",\n  \"localisation\": \"Central Telecom Carthage, Tunis\",\n  \"capaciteTotaleFo\": 960,\n  \"capaciteUtilisee\": 420,\n  \"niveau\": \"Aggregation\",\n  \"vendor\": \"Cisco\",\n  \"ipGestion\": \"10.11.12.1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets/{{idMetro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets",
+                "{{idMetro}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY DELEGATION",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets/delegation/{{idDelegation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets",
+                "delegation",
+                "{{idDelegation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets/{{idMetro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets",
+                "{{idMetro}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idDelegation\": \"{{idDelegation}}\",\n  \"nom\": \"ME-Carthage-001\",\n  \"localisation\": \"Central Telecom Carthage Byrsa, Tunis\",\n  \"capaciteTotaleFo\": 960,\n  \"capaciteUtilisee\": 510,\n  \"niveau\": \"Aggregation\",\n  \"vendor\": \"Cisco\",\n  \"ipGestion\": \"10.11.12.10\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 LienFO SWITCH",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idLien\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idLienSwitch\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idLienSwitch\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 1001,\n  \"typeEquipement\": \"SWITCH\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 2.45,\n  \"nbFibres\": 24,\n  \"attenuationDb\": 0.62,\n  \"datePose\": \"2025-02-12\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienSwitch}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY METRO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/metro/{{idMetro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "metro",
+                "{{idMetro}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienSwitch}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 1001,\n  \"typeEquipement\": \"SWITCH\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 2.55,\n  \"nbFibres\": 24,\n  \"attenuationDb\": 0.58,\n  \"datePose\": \"2025-02-12\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 LienFO MSAN",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idLien\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idLienMsan\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idLienMsan\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 2001,\n  \"typeEquipement\": \"MSAN\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 3.2,\n  \"nbFibres\": 12,\n  \"attenuationDb\": 0.74,\n  \"datePose\": \"2025-03-08\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienMsan}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY TYPE MSAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/type/MSAN",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "type",
+                "MSAN"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienMsan}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 2001,\n  \"typeEquipement\": \"MSAN\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 3.25,\n  \"nbFibres\": 12,\n  \"attenuationDb\": 0.7,\n  \"datePose\": \"2025-03-08\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 LienFO GSM",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idLien\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idLienGsm\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idLienGsm\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 3001,\n  \"typeEquipement\": \"GSM\",\n  \"typeFo\": \"G657A2\",\n  \"longueurKm\": 4.1,\n  \"nbFibres\": 12,\n  \"attenuationDb\": 0.91,\n  \"datePose\": \"2025-04-18\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienGsm}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienGsm}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY TYPE GSM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/type/GSM",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "type",
+                "GSM"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienGsm}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienGsm}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 3001,\n  \"typeEquipement\": \"GSM\",\n  \"typeFo\": \"G657A2\",\n  \"longueurKm\": 4.1,\n  \"nbFibres\": 24,\n  \"attenuationDb\": 0.88,\n  \"datePose\": \"2025-04-18\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 LienFO FH",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idLien\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idLienFhFo\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idLienFhFo\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 4001,\n  \"typeEquipement\": \"FH\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 1.8,\n  \"nbFibres\": 8,\n  \"attenuationDb\": 0.42,\n  \"datePose\": \"2025-05-10\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienFhFo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienFhFo}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY TYPE FH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/type/FH",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "type",
+                "FH"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienFhFo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienFhFo}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMetro\": \"{{idMetro}}\",\n  \"idEquipement\": 4001,\n  \"typeEquipement\": \"FH\",\n  \"typeFo\": \"G652D\",\n  \"longueurKm\": 1.95,\n  \"nbFibres\": 8,\n  \"attenuationDb\": 0.4,\n  \"datePose\": \"2025-05-10\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 SwitchOutdoor",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idSwitch\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idSwitch\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idSwitch\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/switch-outdoor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "switch-outdoor"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienSwitch}}\",\n  \"nom\": \"SWO-Carthage-Port-01\",\n  \"coordX\": 10.3307,\n  \"coordY\": 36.8529,\n  \"localisationNom\": \"Port de Carthage\",\n  \"capaciteAttribuee\": 240,\n  \"capaciteRestante\": 720,\n  \"coutRestant\": 18500.5,\n  \"modele\": \"Huawei S5735-L24T4S-A1\",\n  \"vlanIds\": \"101,102,210\",\n  \"statut\": \"Actif\",\n  \"dateInstallation\": \"2025-02-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/switch-outdoor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "switch-outdoor"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/switch-outdoor/{{idSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "switch-outdoor",
+                "{{idSwitch}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/switch-outdoor/{{idSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "switch-outdoor",
+                "{{idSwitch}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienSwitch}}\",\n  \"nom\": \"SWO-Carthage-Port-01\",\n  \"coordX\": 10.3307,\n  \"coordY\": 36.8529,\n  \"localisationNom\": \"Port de Carthage - Armoire FO\",\n  \"capaciteAttribuee\": 280,\n  \"capaciteRestante\": 680,\n  \"coutRestant\": 17200,\n  \"modele\": \"Huawei S5735-L24T4S-A1\",\n  \"vlanIds\": \"101,102,210,220\",\n  \"statut\": \"Actif\",\n  \"dateInstallation\": \"2025-02-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09 Msan",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idMsan\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idMsan\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idMsan\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/msan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "msan"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienMsan}}\",\n  \"nom\": \"MSAN-LaMarsa-01\",\n  \"coordX\": 10.3247,\n  \"coordY\": 36.8782,\n  \"localisation\": \"La Marsa Plage\",\n  \"typeAcces\": \"GPON\",\n  \"nbLignesTotal\": 1024,\n  \"nbLignesAttribuees\": 614,\n  \"nbLignesRestantes\": 410,\n  \"vendor\": \"Nokia\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/msan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "msan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/msan/{{idMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "msan",
+                "{{idMsan}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/msan/{{idMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "msan",
+                "{{idMsan}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienMsan}}\",\n  \"nom\": \"MSAN-LaMarsa-01\",\n  \"coordX\": 10.3247,\n  \"coordY\": 36.8782,\n  \"localisation\": \"La Marsa Plage - Rue Habib Bourguiba\",\n  \"typeAcces\": \"GPON\",\n  \"nbLignesTotal\": 1024,\n  \"nbLignesAttribuees\": 650,\n  \"nbLignesRestantes\": 374,\n  \"vendor\": \"Nokia\",\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 CableCuivre",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idCable\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idCable\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idCable\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMsan\": \"{{idMsan}}\",\n  \"capaciteTotale\": 600,\n  \"capaciteAttribuee\": 350,\n  \"capaciteRestante\": 250,\n  \"longueurM\": 850,\n  \"typeCable\": \"SFTP\",\n  \"zoneDesserte\": \"La Marsa Corniche\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre/{{idCable}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre",
+                "{{idCable}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY MSAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre/msan/{{idMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre",
+                "msan",
+                "{{idMsan}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre/{{idCable}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre",
+                "{{idCable}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idMsan\": \"{{idMsan}}\",\n  \"capaciteTotale\": 600,\n  \"capaciteAttribuee\": 372,\n  \"capaciteRestante\": 228,\n  \"longueurM\": 910,\n  \"typeCable\": \"SFTP\",\n  \"zoneDesserte\": \"La Marsa Corniche Nord\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 StationGSM",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idStation\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idStation\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idStation\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienGsm}}\",\n  \"idDelegation\": \"{{idDelegation}}\",\n  \"nom\": \"GSM-Carthage-Byrsa-01\",\n  \"coordX\": 10.3233,\n  \"coordY\": 36.8522,\n  \"hba\": \"35m\",\n  \"localisation\": \"Colline de Byrsa, Carthage\",\n  \"statut\": \"Actif\",\n  \"dateMiseEnService\": \"2025-04-25\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm/{{idStation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm",
+                "{{idStation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY DELEGATION",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm/delegation/{{idDelegation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm",
+                "delegation",
+                "{{idDelegation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm/{{idStation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm",
+                "{{idStation}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienGsm}}\",\n  \"idDelegation\": \"{{idDelegation}}\",\n  \"nom\": \"GSM-Carthage-Byrsa-01\",\n  \"coordX\": 10.3233,\n  \"coordY\": 36.8522,\n  \"hba\": \"38m\",\n  \"localisation\": \"Colline de Byrsa, Carthage\",\n  \"statut\": \"Maintenance\",\n  \"dateMiseEnService\": \"2025-04-25\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12 CelluleGSM",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idCellule\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idCellule\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idCellule\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idStation\": \"{{idStation}}\",\n  \"nomAcces\": \"CARTHAGE-BYRSA-LTE-A\",\n  \"azimut\": 120,\n  \"tilt\": 4,\n  \"hauteurAntenne\": 32.5,\n  \"typeAntenne\": \"Huawei ADU4518R\",\n  \"puissanceDbm\": 43.5,\n  \"technologies\": \"4G/5G\",\n  \"bandeFrequence\": \"1800/2600/3500 MHz\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm/{{idCellule}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm",
+                "{{idCellule}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY STATION",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm/station/{{idStation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm",
+                "station",
+                "{{idStation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm/{{idCellule}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm",
+                "{{idCellule}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idStation\": \"{{idStation}}\",\n  \"nomAcces\": \"CARTHAGE-BYRSA-LTE-A\",\n  \"azimut\": 125,\n  \"tilt\": 5,\n  \"hauteurAntenne\": 32.5,\n  \"typeAntenne\": \"Huawei ADU4518R\",\n  \"puissanceDbm\": 44,\n  \"technologies\": \"4G/5G\",\n  \"bandeFrequence\": \"1800/2100/2600/3500 MHz\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13 DocumentationGSM",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idDoc\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idDoc\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idDoc\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idStation\": \"{{idStation}}\",\n  \"typeDoc\": \"PV_INSTALLATION\",\n  \"nomFichier\": \"PV_GSM_Carthage_Byrsa_2025.pdf\",\n  \"chemin\": \"/docs/gsm/carthage/PV_GSM_Carthage_Byrsa_2025.pdf\",\n  \"dateUpload\": \"2025-04-26\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm/{{idDoc}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm",
+                "{{idDoc}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY STATION",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm/station/{{idStation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm",
+                "station",
+                "{{idStation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm/{{idDoc}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm",
+                "{{idDoc}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idStation\": \"{{idStation}}\",\n  \"typeDoc\": \"PV_ACCEPTATION\",\n  \"nomFichier\": \"PV_Acceptation_GSM_Carthage_Byrsa_2025.pdf\",\n  \"chemin\": \"/docs/gsm/carthage/PV_Acceptation_GSM_Carthage_Byrsa_2025.pdf\",\n  \"dateUpload\": \"2025-04-28\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "14 LienFH",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idFh\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idFh\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idFh\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fh"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienFhFo}}\",\n  \"nomLien\": \"FH-Carthage-SidiBouSaid-18G\",\n  \"frequenceMhz\": 18000,\n  \"capaciteMbps\": 1000,\n  \"longueurKm\": 2.7,\n  \"azimutA\": 48,\n  \"azimutB\": 228,\n  \"typeModulation\": \"256QAM\",\n  \"disponibilitePct\": 99.72,\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fh/{{idFh}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fh",
+                "{{idFh}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fh/{{idFh}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fh",
+                "{{idFh}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idLienFo\": \"{{idLienFhFo}}\",\n  \"nomLien\": \"FH-Carthage-SidiBouSaid-18G\",\n  \"frequenceMhz\": 18000,\n  \"capaciteMbps\": 1200,\n  \"longueurKm\": 2.7,\n  \"azimutA\": 49,\n  \"azimutB\": 229,\n  \"typeModulation\": \"512QAM\",\n  \"disponibilitePct\": 99.81,\n  \"statut\": \"Actif\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "15 ClientRadio",
+      "item": [
+        {
+          "name": "01 CREATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200 ou 201\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const idFields = [\"idClient\"];",
+                  "const value = idFields.map(field => json[field]).find(candidate => candidate !== undefined && candidate !== null);",
+                  "pm.test(\"Capture idClient\", function () {",
+                  "  pm.expect(value, \"ID retourne\").to.exist;",
+                  "});",
+                  "pm.collectionVariables.set(\"idClient\", value);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idFh\": \"{{idFh}}\",\n  \"nomClient\": \"Hopital Mongi Slim La Marsa\",\n  \"typeClient\": \"Entreprise\",\n  \"bandePassanteMbps\": 200,\n  \"contrat\": \"TT-B2B-FH-2025-0042\",\n  \"dateActivation\": \"2025-06-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 READ ALL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 READ BY ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio/{{idClient}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio",
+                "{{idClient}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 READ BY FH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio/fh/{{idFh}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio",
+                "fh",
+                "{{idFh}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 UPDATE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio/{{idClient}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio",
+                "{{idClient}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idFh\": \"{{idFh}}\",\n  \"nomClient\": \"Hopital Mongi Slim La Marsa\",\n  \"typeClient\": \"Entreprise critique\",\n  \"bandePassanteMbps\": 300,\n  \"contrat\": \"TT-B2B-FH-2025-0042-A1\",\n  \"dateActivation\": \"2025-06-05\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "99 Nettoyage DELETE - ordre inverse FK",
+      "item": [
+        {
+          "name": "01 DELETE ClientRadio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clients-radio/{{idClient}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients-radio",
+                "{{idClient}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "02 DELETE LienFH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fh/{{idFh}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fh",
+                "{{idFh}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "03 DELETE DocumentationGSM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/documentation-gsm/{{idDoc}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "documentation-gsm",
+                "{{idDoc}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "04 DELETE CelluleGSM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cellules-gsm/{{idCellule}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cellules-gsm",
+                "{{idCellule}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "05 DELETE StationGSM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/stations-gsm/{{idStation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "stations-gsm",
+                "{{idStation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "06 DELETE CableCuivre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/cables-cuivre/{{idCable}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "cables-cuivre",
+                "{{idCable}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "07 DELETE Msan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/msan/{{idMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "msan",
+                "{{idMsan}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "08 DELETE SwitchOutdoor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/switch-outdoor/{{idSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "switch-outdoor",
+                "{{idSwitch}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "09 DELETE LienFO FH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienFhFo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienFhFo}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10 DELETE LienFO GSM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienGsm}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienGsm}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11 DELETE LienFO MSAN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienMsan}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienMsan}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12 DELETE LienFO SWITCH",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/liens-fo/{{idLienSwitch}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "liens-fo",
+                "{{idLienSwitch}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13 DELETE MetroEthernet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/metroethernets/{{idMetro}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "metroethernets",
+                "{{idMetro}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "14 DELETE Delegation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/delegations/{{idDelegation}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "delegations",
+                "{{idDelegation}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "15 DELETE Gouvernorat",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204 ou 200\", function () {",
+                  "  pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/gouvernorats/{{idGouv}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "gouvernorats",
+                "{{idGouv}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "authEmail",
+      "value": "admin@gis-tt.tn",
+      "type": "string"
+    },
+    {
+      "key": "authPassword",
+      "value": "Admin@2025",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idGouv",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idDelegation",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idMetro",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idLienSwitch",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idLienMsan",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idLienGsm",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idLienFhFo",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idSwitch",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idMsan",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idCable",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idStation",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idCellule",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idDoc",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idFh",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "idClient",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

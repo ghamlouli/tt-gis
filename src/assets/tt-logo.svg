@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1152 620" role="img" aria-label="Tunisie Telecom">
+  <defs>
+    <linearGradient id="blueGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4bb5f2"/>
+      <stop offset="100%" stop-color="#1f4ea3"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#39c36a"/>
+      <stop offset="100%" stop-color="#2a8f42"/>
+    </linearGradient>
+    <linearGradient id="yellowGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe81a"/>
+      <stop offset="100%" stop-color="#ffbf12"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffa13a"/>
+      <stop offset="100%" stop-color="#f05d22"/>
+    </linearGradient>
+    <linearGradient id="pinkGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ef3a86"/>
+      <stop offset="100%" stop-color="#b11f7a"/>
+    </linearGradient>
+    <linearGradient id="violetGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7d2d90"/>
+      <stop offset="100%" stop-color="#4c2375"/>
+    </linearGradient>
+  </defs>
+
+  <g opacity="0.98">
+    <path d="M0 360L291 0L433 385L0 360Z" fill="url(#blueGrad)"/>
+    <path d="M291 0L504 19L433 385L291 0Z" fill="#37a7dc"/>
+    <path d="M504 19L716 154L433 385L504 19Z" fill="#2cb39d"/>
+    <path d="M716 154L878 217L433 385L716 154Z" fill="url(#greenGrad)"/>
+    <path d="M878 217L1152 382L433 385L878 217Z" fill="url(#yellowGrad)"/>
+    <path d="M433 385L1152 382L738 625L433 385Z" fill="url(#orangeGrad)"/>
+    <path d="M433 385L738 625L562 720L433 385Z" fill="#ea3b1e"/>
+    <path d="M433 385L562 620L408 605L433 385Z" fill="url(#pinkGrad)"/>
+    <path d="M0 360L433 385L126 718L0 360Z" fill="url(#violetGrad)"/>
+    <path d="M0 360L126 620L408 605L433 385L0 360Z" fill="#d6245d" opacity="0.55"/>
+    <path d="M433 385L338 0L504 19L433 385Z" fill="#38b39c" opacity="0.9"/>
+    <path d="M433 385L716 154L878 217L433 385Z" fill="#39b34f" opacity="0.85"/>
+    <path d="M433 385L878 217L1152 382L433 385Z" fill="#ffd319" opacity="0.9"/>
+  </g>
+
+  <g fill="#000000" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    <text x="235" y="470" font-size="350">T</text>
+    <text x="507" y="470" font-size="350">T</text>
+    <text x="108" y="540" font-size="82">Tunisie Telecom</text>
+  </g>
+</svg>

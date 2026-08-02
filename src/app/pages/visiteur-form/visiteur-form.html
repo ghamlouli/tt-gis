@@ -1,0 +1,144 @@
+<div class="visiteur-page">
+  <div class="visiteur-background"></div>
+  <div class="visiteur-card">
+    <div class="card-header">
+      <img src="/assets/tt-logo.png" alt="Tunisie Telecom" class="header-logo">
+      <button class="back-btn" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Retour
+      </button>
+    </div>
+
+    <div class="card-content">
+      <h1 class="page-title">Espace <span class="highlight">Visiteur</span></h1>
+      <p class="page-subtitle">Veuillez entrer vos informations pour continuer</p>
+
+      <form class="visiteur-form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cin">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                <path d="M7 8h10M7 12h10M7 16h6"/>
+              </svg>
+              CIN
+            </label>
+            <input
+              id="cin"
+              type="text"
+              name="cin"
+              placeholder="Numéro CIN"
+              [(ngModel)]="visiteur.cin"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="nom">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              Nom
+            </label>
+            <input
+              id="nom"
+              type="text"
+              name="nom"
+              placeholder="Nom"
+              [(ngModel)]="visiteur.nom"
+              required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="prenom">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Prénom
+          </label>
+          <input
+            id="prenom"
+            type="text"
+            name="prenom"
+            placeholder="Prénom"
+            [(ngModel)]="visiteur.prenom"
+            required>
+        </div>
+
+        <div class="location-section">
+          <label class="location-label">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Sélectionnez votre localisation sur la carte
+          </label>
+          <div class="map-container">
+            <app-location-picker
+              [initialLat]="visiteur.coordY"
+              [initialLng]="visiteur.coordX"
+              (locationSelected)="onLocationSelected($event)">
+            </app-location-picker>
+          </div>
+        </div>
+
+        <p class="error-message" *ngIf="errorMessage()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4M12 16h.01"/>
+          </svg>
+          {{ errorMessage() }}
+        </p>
+
+        <button class="submit-btn" type="submit" [disabled]="loading() || !visiteur.coordX || !visiteur.coordY">
+          <span *ngIf="!loading()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Stocker mes informations
+          </span>
+          <span *ngIf="loading()" class="loading-text">
+            <svg class="spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+            Stockage en cours...
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div class="modal-overlay" *ngIf="showConfirmationModal()">
+  <div class="modal-card">
+    <div class="modal-icon">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01"/>
+      </svg>
+    </div>
+    <h2 class="modal-title">Voulez-vous bénéficier d'un service TT ?</h2>
+    <p class="modal-subtitle">Découvrez nos services et localisations disponibles</p>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-no" (click)="onServiceChoice(false)" [disabled]="loading()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+        Non
+      </button>
+      <button class="modal-btn modal-btn-yes" (click)="onServiceChoice(true)" [disabled]="loading()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        Oui
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,234 @@
+<section class="entity-crud-page">
+  <header class="page-hero" [style.--page-accent]="page.accent || '#2563eb'">
+    <span class="badge" *ngIf="page.badge">{{ page.badge }}</span>
+    <h1>{{ page.title }}</h1>
+    <p class="subtitle">{{ page.subtitle }}</p>
+    <p class="intro" *ngIf="page.intro">{{ page.intro }}</p>
+
+    <div class="entity-tabs" *ngIf="hasMultipleEntities">
+      <button
+        type="button"
+        *ngFor="let entity of page.entities"
+        class="entity-tab"
+        [class.entity-tab--active]="entity === activeEntity"
+        (click)="selectEntity(entity)">
+        {{ entityLabels[entity] }}
+        <span class="entity-tab__count">{{ getEntityCount(entity) }}</span>
+      </button>
+    </div>
+  </header>
+
+  <div
+    class="feedback"
+    *ngIf="feedbackMessage"
+    [class.feedback--error]="feedbackType === 'error'">
+    {{ feedbackMessage }}
+  </div>
+
+  <section class="crud-panel">
+    <header class="panel-header">
+      <div class="panel-header__info">
+        <h2>{{ entityLabels[activeEntity] }}</h2>
+        <p>{{ records.length }} enregistrement(s) affiché(s)</p>
+      </div>
+
+      <button type="button" class="btn-crud btn-crud--add" (click)="openCreate()">
+        <i class="bi bi-plus-lg"></i>
+        Ajouter
+      </button>
+    </header>
+
+    <div class="filters-bar">
+      <div class="filter-group">
+        <label for="searchField">Rechercher dans</label>
+        <select
+          id="searchField"
+          name="searchField"
+          [(ngModel)]="searchField"
+          (ngModelChange)="onFiltersChange()">
+          <option value="all">Tous les attributs</option>
+          <option *ngFor="let field of fieldConfigs" [value]="field.name">
+            {{ field.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group filter-group--search">
+        <label for="searchQuery">Mot-clé</label>
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input
+            id="searchQuery"
+            type="search"
+            placeholder="Saisir une valeur..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onFiltersChange()">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label for="sortField">Trier par</label>
+        <select
+          id="sortField"
+          name="sortField"
+          [(ngModel)]="sortField"
+          (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let field of fieldConfigs" [value]="field.name">
+            {{ field.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group filter-group--sort">
+        <label>Ordre</label>
+        <button type="button" class="sort-toggle" (click)="toggleSortDirection()">
+          <i class="bi" [class.bi-sort-alpha-down]="sortDirection === 'asc'" [class.bi-sort-alpha-up-alt]="sortDirection === 'desc'"></i>
+          {{ sortDirection === 'asc' ? 'Croissant' : 'Décroissant' }}
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrapper" *ngIf="records.length; else emptyState">
+      <table class="crud-table">
+        <thead>
+          <tr>
+            <th *ngFor="let column of displayColumns">{{ getFieldLabel(column) }}</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of records">
+            <td *ngFor="let column of displayColumns">{{ formatValue(record[column]) }}</td>
+            <td class="actions-col">
+              <div class="row-actions">
+                <button type="button" class="btn-crud btn-crud--view" (click)="openView(record)">
+                  <i class="bi bi-eye"></i>
+                  Voir
+                </button>
+                <button type="button" class="btn-crud btn-crud--edit" (click)="openEdit(record)">
+                  <i class="bi bi-pencil"></i>
+                  Modifier
+                </button>
+                <button type="button" class="btn-crud btn-crud--delete" (click)="openDelete(record)">
+                  <i class="bi bi-trash"></i>
+                  Supprimer
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <i class="bi bi-inbox"></i>
+        <h3>Aucun enregistrement</h3>
+        <p *ngIf="searchQuery; else noSearch">
+          Aucun résultat pour « {{ searchQuery }} » dans
+          {{ searchField === 'all' ? 'les attributs' : getFieldLabel(searchField) }}.
+        </p>
+        <ng-template #noSearch>
+          <p>
+            Utilisez le bouton <strong>Ajouter</strong> pour créer le premier
+            enregistrement de {{ entityLabels[activeEntity] }}.
+          </p>
+        </ng-template>
+      </div>
+    </ng-template>
+  </section>
+</section>
+
+<div class="modal-backdrop" *ngIf="modalMode" (click)="closeModal()"></div>
+
+<div
+  class="crud-modal"
+  *ngIf="modalMode"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="'crud-modal-title'">
+  <div class="crud-modal__dialog" (click)="$event.stopPropagation()">
+    <header class="crud-modal__header">
+      <div>
+        <span class="modal-badge">{{ modalBadge }}</span>
+        <h3 id="crud-modal-title">{{ modalTitle }}</h3>
+      </div>
+      <button type="button" class="modal-close" (click)="closeModal()" aria-label="Fermer">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </header>
+
+    <div class="crud-modal__body" *ngIf="modalMode === 'delete'">
+      <div class="delete-box">
+        <i class="bi bi-exclamation-triangle"></i>
+        <p>
+          Confirmez-vous la suppression de
+          <strong>{{ getRecordLabel(selectedRecord!) }}</strong> ?
+        </p>
+        <p class="delete-warning">Cette action est irréversible.</p>
+      </div>
+    </div>
+
+    <div class="crud-modal__body" *ngIf="modalMode === 'view'">
+      <dl class="detail-list">
+        <div class="detail-item" *ngFor="let field of fieldConfigs">
+          <dt>{{ field.label }}</dt>
+          <dd>{{ formatValue(formData[field.name]) }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <form
+      class="crud-modal__body crud-form"
+      *ngIf="modalMode === 'create' || modalMode === 'edit'"
+      (ngSubmit)="saveRecord()">
+      <div class="form-grid">
+        <label class="form-field" *ngFor="let field of fieldConfigs">
+          <span>{{ field.label }}</span>
+
+          <select
+            *ngIf="field.inputType === 'select'"
+            [name]="field.name"
+            [(ngModel)]="formData[field.name]">
+            <option [ngValue]="null">— Sélectionner —</option>
+            <option *ngFor="let option of field.options" [ngValue]="option">{{ option }}</option>
+          </select>
+
+          <input
+            *ngIf="field.inputType !== 'select'"
+            [type]="field.inputType"
+            [name]="field.name"
+            [placeholder]="field.label"
+            [(ngModel)]="formData[field.name]">
+        </label>
+      </div>
+
+      <footer class="crud-modal__footer">
+        <button type="button" class="btn-secondary" (click)="closeModal()">Annuler</button>
+        <button type="submit" class="btn-primary">
+          {{ modalMode === 'create' ? 'Créer' : 'Enregistrer' }}
+        </button>
+      </footer>
+    </form>
+
+    <footer class="crud-modal__footer" *ngIf="modalMode === 'view'">
+      <button type="button" class="btn-secondary" (click)="closeModal()">Fermer</button>
+      <button type="button" class="btn-primary" (click)="openEdit(selectedRecord!)">
+        <i class="bi bi-pencil"></i>
+        Modifier
+      </button>
+      <button type="button" class="btn-danger" (click)="openDelete(selectedRecord!)">
+        <i class="bi bi-trash"></i>
+        Supprimer
+      </button>
+    </footer>
+
+    <footer class="crud-modal__footer" *ngIf="modalMode === 'delete'">
+      <button type="button" class="btn-secondary" (click)="closeModal()">Annuler</button>
+      <button type="button" class="btn-danger" (click)="confirmDelete()">
+        <i class="bi bi-trash"></i>
+        Confirmer la suppression
+      </button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<header class="app-header">
+  <div class="header-top">
+    <div class="brand-block">
+      <button class="brand-logo" type="button" (click)="navigateTo('/workspace')">
+        <img src="/assets/tt-logo.png" alt="TT Tunisie Telecom" class="logo-img">
+      </button>
+      <div class="brand-copy">
+        <span class="brand-title">TT GIS</span>
+        <span class="brand-subtitle">Plateforme réseaux d'accès</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button
+        class="home-btn"
+        type="button"
+        [class.active]="isHomeActive()"
+        (click)="navigateTo('/workspace')">
+        Menu principal
+      </button>
+
+      <div class="user-panel">
+        <div class="user-avatar">{{ userInitials }}</div>
+        <div class="user-meta">
+          <span class="user-name">{{ currentUserName }}</span>
+          <span class="user-role">{{ currentRole }}</span>
+        </div>
+      </div>
+
+      <button class="logout-btn" type="button" (click)="logout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <nav class="header-nav" aria-label="Navigation principale">
+    <div class="nav-section">
+      <span class="nav-section-label">Modules réseau</span>
+      <div class="nav-modules">
+        <div
+          class="nav-module"
+          *ngFor="let module of networkModules"
+          [class.active]="isModuleActive(module)">
+          <button
+            class="module-trigger"
+            type="button"
+            [style.--module-accent]="module.accent"
+            (click)="toggleDropdown(module.id, $event)">
+            <span class="module-icon">{{ module.shortLabel }}</span>
+            <span class="module-label">{{ module.label }}</span>
+            <span class="dropdown-arrow" [class.open]="activeMenu === module.id">▾</span>
+          </button>
+
+          <div class="dropdown-panel" [class.show]="activeMenu === module.id" (click)="$event.stopPropagation()">
+            <div class="dropdown-header" [style.background]="module.accent">
+              <strong>{{ module.label }}</strong>
+              <span>{{ module.links.length }} entrées</span>
+            </div>
+            <button
+              class="dropdown-link"
+              type="button"
+              *ngFor="let link of module.links"
+              (click)="navigateTo(link.route, $event)">
+              <span>{{ link.label }}</span>
+              <span class="link-arrow">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-section nav-section--tools">
+      <span class="nav-section-label">Outils</span>
+      <div class="nav-tools">
+        <button
+          class="tool-btn"
+          type="button"
+          *ngFor="let tool of tools"
+          [class.active]="isToolActive(tool)"
+          [class.muted]="tool.muted"
+          [disabled]="tool.muted"
+          (click)="openTool(tool, $event)">
+          {{ tool.label }}
+        </button>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<div class="modal" [class.show]="gisCloudModalOpen" (click)="closeGISCloudModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <p class="modal-kicker">Visualisation</p>
+        <h2>GIS Cloud</h2>
+      </div>
+      <button class="close-btn" type="button" (click)="closeGISCloudModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p>Générez la carte demandée pour votre session de supervision.</p>
+      <div class="map-preview" [class.generated]="mapGenerated">
+        <span *ngIf="!mapGenerated">Carte en attente de génération</span>
+        <strong *ngIf="mapGenerated">Carte générée avec succès</strong>
+      </div>
+      <button class="generate-btn" type="button" (click)="generateMap()">Générer la carte</button>
+    </div>
+  </div>
+</div>

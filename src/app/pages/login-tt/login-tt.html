@@ -1,0 +1,38 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <img src="/assets/tt-logo.png" alt="Tunisie Telecom" class="auth-logo">
+
+    <h1 class="auth-title">Authentification TT</h1>
+
+    <form class="auth-form" (ngSubmit)="submit()">
+      <label for="login">Login</label>
+      <input
+        id="login"
+        type="text"
+        name="login"
+        placeholder="Login"
+        autocomplete="username"
+        [(ngModel)]="login">
+
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        placeholder="Mot de passe"
+        autocomplete="current-password"
+        [(ngModel)]="password">
+
+      <p class="error-message" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Connexion...' : 'Connexion' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      <button type="button" class="link-btn" (click)="goBack()">← Retour</button>
+      <button type="button" class="link-btn" (click)="goToForgotPassword()">Mot de passe oublié ?</button>
+    </p>
+  </div>
+</div>
